@@ -13,20 +13,29 @@ function M.insert_url_with_selection()
 	-- Get the visually selected text
 	local start_pos = vim.fn.getpos("'<")
 	local end_pos = vim.fn.getpos("'>")
-	local lines = vim.fn.getline(start_pos[2], end_pos[2])
+	local start_row, start_col = start_pos[2], start_pos[3]
+	local end_row, end_col = end_pos[2], end_pos[3]
+
+	-- Adjust for Lua's 1-based indexing
+	start_col = start_col - 1
+
+	-- Get the selected lines
+	local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+
 	if #lines == 0 then
 		print("No text selected")
 		return
 	end
 
-	-- If multiple lines are selected, join them
-	local selected_text = table.concat(lines, "\n")
-
-	-- If it's a single line, but partial, extract the correct portion
+	local selected_text
 	if #lines == 1 then
-		local start_col = start_pos[3]
-		local end_col = end_pos[3]
-		selected_text = string.sub(selected_text, start_col, end_col)
+		-- Single line selection
+		selected_text = string.sub(lines[1], start_col + 1, end_col)
+	else
+		-- Multi-line selection
+		lines[1] = string.sub(lines[1], start_col + 1)
+		lines[#lines] = string.sub(lines[#lines], 1, end_col)
+		selected_text = table.concat(lines, "\n")
 	end
 
 	print("Selected text: " .. selected_text)
@@ -41,10 +50,10 @@ function M.insert_url_with_selection()
 
 	-- Insert a new line below the current line and put the URL there
 	vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
-	vim.api.nvim_buf_set_lines(0, row + 1, row + 1, false, { final_url })
+	vim.api.nvim_buf_set_lines(0, row, row + 1, false, { final_url })
 
 	-- Move the cursor to the end of the inserted URL
-	vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
+	vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
 
 	print("URL inserted on new line below")
 end
