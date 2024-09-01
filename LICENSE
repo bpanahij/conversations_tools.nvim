@@ -2,6 +2,7 @@
 
 local M = {}
 
+
 function M.setup(opts)
     opts = opts or {}
     -- You can add any configuration options here

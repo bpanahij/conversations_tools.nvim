@@ -3,7 +3,7 @@ local M = {}
 function M.setup(opts)
 	opts = opts or {}
 	M.base_url = opts.base_url
-		or "https://us-west-1.console.aws.amazon.com/cloudwatch/home?region=us-west-1#logsV2:log-groups/log-group/CarterLogGroup/log-events/{REPLACE_THIS_STRING}$3Fstart$3D1722470400000$26end$3D1722556799000"
+		or "https://us-west-1.console.aws.amazon.com/cloudwatch/home?region=us-west-1#logsV2:log-groups/log-group/CarterLogGroup/log-events/{REPLACE_THIS_STRING}$3Fstart$3D-345600000"
 	print("Plugin setup complete. Base URL: " .. M.base_url)
 end
 
