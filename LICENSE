@@ -1,0 +1,102 @@
+-- File: ~/.config/nvim/lua/url-opener/init.lua
+
+local M = {}
+
+function M.setup(opts)
+    opts = opts or {}
+    -- You can add any configuration options here
+    -- For example, allowing users to customize the base URL:
+    M.base_url = opts.base_url or "https://us-west-1.console.aws.amazon.com/cloudwatch/home?region=us-west-1#logsV2:log-groups/log-group/CarterLogGroup/log-events/{REPLACE_THIS_STRING}$3Fstart$3D1722470400000$26end$3D1722556799000"
+end
+
+function M.open_url_with_selection()
+    -- Get the visually selected text
+    vim.cmd('normal! "zy')
+    local selected_text = vim.fn.getreg('z')
+    
+    -- Replace the placeholder with the selected text
+    local final_url = string.gsub(M.base_url, "{REPLACE_THIS_STRING}", selected_text)
+    
+    -- Open the URL (this uses xdg-open on Linux, open on macOS, and start on Windows)
+    local open_cmd
+    if vim.fn.has('mac') == 1 then
+        open_cmd = 'open'
+    elseif vim.fn.has('unix') == 1 then
+        open_cmd = 'xdg-open'
+    elseif vim.fn.has('win32') == 1 then
+        open_cmd = 'start'
+    else
+        print("Unsupported operating system")
+        return
+    end
+    
+    os.execute(open_cmd .. ' "' .. final_url .. '"')
+end
+
+-- Set up the command
+vim.api.nvim_create_user_command('OpenUrlWithSelection', function()
+    M.open_url_with_selection()
+end, {range = true})
+
+return M
+
+-- File: ~/.config/nvim/lua/url-opener/README.md
+
+# URL Opener
+
+A Neovim plugin that opens a URL after replacing a specific part with the string selected in visual mode.
+
+## Installation
+
+Using [lazy.nvim](https://github.com/folke/lazy.nvim):
+
+```lua
+{
+    "yourusername/url-opener.nvim",
+    config = function()
+        require("url-opener").setup({
+            -- Optionally, you can customize the base URL here
+            -- base_url = "your custom URL with {REPLACE_THIS_STRING} placeholder"
+        })
+    end,
+}
+```
+
+## Usage
+
+1. Select the text you want to replace `{REPLACE_THIS_STRING}` with in visual mode.
+2. Run the command `:OpenUrlWithSelection`
+
+## Configuration
+
+You can customize the base URL by passing it to the setup function:
+
+```lua
+require("url-opener").setup({
+    base_url = "https://your-custom-url.com/{REPLACE_THIS_STRING}"
+})
+```
+
+-- File: ~/.config/nvim/lua/url-opener/LICENSE
+
+MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
