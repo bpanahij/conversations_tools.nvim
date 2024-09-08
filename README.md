@@ -1,4 +1,4 @@
-# URL Opener
+# URL Template Opener
 
 A Neovim plugin that opens a URL after replacing a specific part with the string selected in visual mode.
 
@@ -8,11 +8,12 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-    "yourusername/url-opener.nvim",
+    "bpanahij/url_templates.nvim",
     config = function()
-        require("url-opener").setup({
+        require("url_templates").setup({
             -- Optionally, you can customize the base URL here
             -- base_url = "your custom URL with {REPLACE_THIS_STRING} placeholder"
+            base_url = "https://your-custom-url.com/{REPLACE_THIS_STRING}"
         })
     end,
 }

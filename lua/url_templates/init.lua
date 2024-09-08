@@ -2,8 +2,7 @@ local M = {}
 
 function M.setup(opts)
 	opts = opts or {}
-	M.base_url = opts.base_url
-		or "https://us-west-1.console.aws.amazon.com/cloudwatch/home?region=us-west-1#logsV2:log-groups/log-group/CarterLogGroup/log-events/{REPLACE_THIS_STRING}$3Fstart$3D-345600000"
+	M.base_url = opts.base_url or "https://www.google.com?query={REPLACE_THIS_STRING}"
 end
 
 function M.insert_url_with_selection()

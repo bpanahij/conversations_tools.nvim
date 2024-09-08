@@ -1,4 +1,4 @@
--- File: ~/.config/nvim/lua/url-opener/init.lua
+-- File: ~/.config/nvim/lua/url_template/init.lua
 
 local M = {}
 
